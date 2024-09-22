@@ -99,3 +99,27 @@ def test_grade_assignment_draft_assignment(client, h_teacher_1):
     data = response.json
 
     assert data['error'] == 'FyleError'
+
+def test_get_assignments_no_assignments(client, h_teacher_no_assignments):
+    response = client.get(
+        '/teacher/assignments',
+        headers=h_teacher_no_assignments
+    )
+
+    assert response.status_code == 200
+    assert response.json['data'] == []  # Expect an empty list
+def test_grade_assignment_valid_grade(client, h_teacher_1):
+    response = client.post(
+        '/teacher/assignments/grade',
+        headers=h_teacher_1,
+        json={
+            "id": 3,  # Assume this assignment is valid and belongs to teacher_1
+            "grade": "B"  # Assuming "B" is a valid grade in your enum
+        }
+    )
+
+    assert response.status_code == 200
+    data = response.json
+
+    assert data['grade'] == "B"
+    assert data['state'] == "GRADED"

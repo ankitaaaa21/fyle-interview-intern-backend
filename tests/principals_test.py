@@ -6,12 +6,12 @@ def test_get_assignments(client, h_principal):
         '/principal/assignments',
         headers=h_principal
     )
-
+    print(response.json)  # Add this line to check the actual response
     assert response.status_code == 200
 
     data = response.json['data']
     for assignment in data:
-        assert assignment['state'] in [AssignmentStateEnum.SUBMITTED, AssignmentStateEnum.GRADED]
+        assert assignment['state'] in [AssignmentStateEnum.SUBMITTED.value, AssignmentStateEnum.GRADED.value]
 
 
 def test_grade_assignment_draft_assignment(client, h_principal):

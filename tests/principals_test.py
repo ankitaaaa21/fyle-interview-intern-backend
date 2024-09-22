@@ -60,3 +60,17 @@ def test_regrade_assignment(client, h_principal):
 
     assert response.json['data']['state'] == AssignmentStateEnum.GRADED.value
     assert response.json['data']['grade'] == GradeEnum.B
+
+if response.status_code != 200:
+    print(response.json)
+
+def test_grade_assignment_invalid_id(client, h_principal):
+    response = client.post(
+        '/principal/assignments/grade',
+        json={
+            'id': 999,  # Assuming this ID doesn't exist
+            'grade': GradeEnum.A.value
+        },
+        headers=h_principal
+    )
+    assert response.status_code == 404  # Or the appropriate error code for not found
